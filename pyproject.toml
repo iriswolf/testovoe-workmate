@@ -1,0 +1,190 @@
+[project]
+name = "testovoe"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Abramov Evgeniy",email = "61637662+iriswolf@users.noreply.github.com"}
+]
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+]
+
+[tool.poetry.group.dev.dependencies]
+black = "^25.1.0"
+isort = "^6.0.1"
+ruff = "^0.11.7"
+mypy = "^1.15.0"
+pre-commit = "^4.2.0"
+
+[tool.poetry.group.test.dependencies]
+pytest = "^8.3.5"
+pytest-html = "^4.1.1"
+pytest-cov = "^6.1.1"
+pytest-mock = "^3.14.0"
+pytest-mypy = "^1.0.1"
+hypothesis = "^6.131.15"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 99
+target-version = "py313"
+src = ["app", "tests"]
+exclude = [
+    ".git",
+    "build",
+    "dist",
+    "__pycache__",
+    "*.pyc",
+    "venv",
+    ".venv",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".ruff_cache",
+]
+
+[tool.ruff.lint]
+select = [
+    "A",      # flake8-builtins (конфликты с встроенными именами)
+    "B",      # flake8-bugbear (потенциальные баги)
+    "C",      # flake8-bandit (проверка безопасности кода)
+    "D",      # pydocstyle (докстринги)
+    "E",      # pycodestyle (ошибки форматирования)
+    "F",      # pyflakes (ошибки выполнения)
+    "G",      # flake8-logging-format (правильное использование logging)
+    "I",      # isort (порядок импортов)
+    "N",      # pep8-naming (правила именования)
+    "Q",      # flake8-quotes (предпочтение двойных кавычек)
+    "W",      # pycodestyle (предупреждения форматирования)
+
+    "C4",     # flake8-comprehensions (оптимизация генераторов и списковых выражений)
+    "C90",    # mccabe (сложность кода)
+    "FBT",    # flake8-boolean-trap (предотвращение ловушек с булевыми значениями)
+    "PERF",   # flake8-perf (проверки на производительность)
+    "PL",     # pylint совместимость (совместимость с pylint)
+    "PT",     # flake8-pytest-style (правила стиля для pytest)
+    "T10",    # flake8-debugger (запрещено использование отладочного кода типа pdb)
+    "T20",    # flake8-print (запрещённый вывод через print)
+    "TRY",    # tryceratops (правильное использование try/except)
+    "UP",     # pyupgrade (обновление кода под новую версию Python)
+
+    "ANN",    # flake8-annotations (аннотации типов)
+    "ARG",    # flake8-unused-arguments (неиспользуемые аргументы функций)
+    "ERA",    # удаление закомментированного кода
+    "FURB",   # рекомендации по улучшению стиля кода
+    "RET",    # flake8-return (ошибки в логике return)
+    "SIM",    # flake8-simplify (упрощение кода)
+    "YTT",    # проверка устаревших конструкций (например, устаревших способов форматирования)
+
+    "ASYNC",  # flake8-async (проверка async-кода)
+]
+ignore = [
+    "D100",  # Missing docstring in public module
+    "D101",  # Missing docstring in public class
+    "D102",  # Missing docstring in public method
+    "D103",  # Missing docstring in public function
+    "D104",  # Missing docstring in public package
+    "D105",  # Missing docstring in magic method
+    "D107",  # Missing docstring in `__init__`
+    "D212",  # Multi-line docstring summary should start at the firest line
+    "D203",  # 1 blank line required before class docstring
+    "D205",  # 1 blank line required between summary line and description
+    "D400",  # First line should end with a period
+    "D401",  # First line should be in imperative mood
+    "D415",  # First line should end with a period, question mark, or exclamation point
+    "D202",
+    "D213",
+    "B024",  # ABC без abstractmethod
+    "ANN401",  # ANN401 Dynamically typed expressions (typing.Any) are disallowed in `value`
+    "TRY003",  # TRY003 Avoid specifying long messages outside the exception class
+    "PLR0913",
+]
+
+# Максимальная допустимая сложность функции
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+
+# Порядок импортов
+[tool.ruff.lint.isort]
+force-single-line = false
+combine-as-imports = true
+known-first-party = ["app"]
+
+# Игнорировать длинные строки только в определённых местах (если хочется)
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = [
+    "D",   # В тестах игнорируем докстринги
+    "ANN"  # Аннотации типов функций
+]
+"__init__.py" = ["F401"]  # Разрешаем неиспользуемые импорты в __init__.py
+
+[tool.black]
+line-length = 99
+target-version = ['py313']
+skip-string-normalization = false
+exclude = '''
+(
+    \.eggs
+  | \.git
+  | \.tox
+  | build
+  | dist
+  | .venv
+  | docs
+  | migrations
+  | __pychache__
+)
+'''
+
+[tool.isort]
+profile = "black"
+
+[tool.mypy]
+python_version = "3.13"
+plugins = []
+strict = true
+pretty = true
+show_error_codes = true
+warn_unused_configs = true
+warn_return_any = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+no_implicit_optional = true
+disallow_any_generics = true
+disallow_subclassing_any = true
+namespace_packages = true
+follow_imports_for_stubs = true
+show_absolute_path = true
+
+[tool.pytest.ini_options]
+asyncio_default_fixture_loop_scope = "function"
+testpaths = [
+    "tests",
+]
+addopts = "-ra --strict-markers --tb=short"  # -ra: показать короткие отчеты об упавших тестах, strict-markers: запрещать нн маркеры, tb=short: короткий traceback
+filterwarnings = [
+    "error",  # Варны в ошибки
+]
+
+[tool.coverage.run]
+branch = false
+parallel = true
+omit = [
+    "*/__main__.py",
+    "app/domain/reports/registry.py"
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "if __name__ == .__main__.:",
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
+    "@abstractmethod",
+    "@overload",
+]
