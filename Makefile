@@ -58,7 +58,7 @@ test:
 
 .PHONY: test-ci-codecov
 test-ci-codecov:
-	poetry run pytest --cov=testovoe-workmate --cov-config .coveragerc --cov-report=xml
+	poetry run pytest --cov=app --cov-config .coveragerc --cov-report=xml
 
 .PHONY: test-coverage
 test-coverage:
