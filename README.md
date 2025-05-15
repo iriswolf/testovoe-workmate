@@ -87,7 +87,7 @@ pip install poetry
 ### ✅ Основной запуск (без зависимостей)
 
 ```bash
-python -m app --type payout --input ./path-to-file1.csv ./path-to-file2.csv
+python -m app --report payout --input ./path-to-file1.csv ./path-to-file2.csv
 ```
 
 ### 📖 Помощь по аргументам cli
