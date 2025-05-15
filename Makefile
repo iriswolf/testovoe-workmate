@@ -48,9 +48,6 @@ format:
 .PHONY: check
 check: lint type-check test
 
-.PHONY: ci-check
-ci-check: check
-
 # =================================================================================================
 # Tests
 # =================================================================================================
@@ -58,6 +55,10 @@ ci-check: check
 .PHONY: test
 test:
 	poetry run pytest $(tests_dir)
+
+.PHONY: test-ci-codecov
+test-ci-codecov:
+	poetry run pytest --cov=testovoe-workmate --cov-config .coveragerc --cov-report=xml
 
 .PHONY: test-coverage
 test-coverage:

@@ -1,0 +1,77 @@
+name: Tests
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/tests.yml"
+      - "app/**"
+      - "tests/**"
+      - "codecov.yaml"
+      - "pyproject.toml"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/tests.yml"
+      - "app/**"
+      - "tests/**"
+      - "pyproject.toml"
+
+jobs:
+  tests:
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+        python-version:
+          - '3.13'
+
+    defaults:
+      # Force use bash instead of PS
+      run:
+        shell: bash
+
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }} on ${{ matrix.os }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install poetry
+        run: pip install poetry
+
+      - name: Cache poetry and venv
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/pypoetry
+            .venv
+          key: ${{ matrix.os }}--poetry-${{ hashFiles('**/poetry.lock') }}
+          restore-keys: |
+            ${{ matrix.os }}--poetry-
+
+      - name: Install dependencies
+        run: |
+          poetry install --with dev,test --no-root
+
+      - name: Lint code
+        run: make lint
+
+      - name: Run tests
+        run: make test-ci-codecov
+
+      - name: Upload coverage data
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: coverage.xml
+          flags: unittests
+          name: py-${{ matrix.python-version }}-${{ matrix.os }}
+          fail_ci_if_error: true
