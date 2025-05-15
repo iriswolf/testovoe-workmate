@@ -1,6 +1,8 @@
 # 🧪 Тестовое Workmate
 
 ![Python Version](https://img.shields.io/badge/python-3.13-blue)
+[![Tests](https://github.com/iriswolf/testovoe-workmate/actions/workflows/tests.yml/badge.svg)](https://github.com/iriswolf/testovoe-workmate/actions/workflows/tests.yml)
+![Codecov](https://img.shields.io/codecov/c/github/iriswolf/testovoe-workmate)
 
 **Техническое задание**: [Открыть Google Doc](https://docs.google.com/document/d/1Kyj6X7poy2e1lKUaZasNDIFnMYdAlyDdQ9FCBkBCe1s)
 
@@ -86,6 +88,11 @@ pip install poetry
 
 ```bash
 python -m app --type payout --input ./path-to-file1.csv ./path-to-file2.csv
+```
+
+### 📖 Помощь по аргументам cli
+```bash
+python -m app --help
 ```
 
 ---
