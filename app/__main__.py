@@ -21,37 +21,36 @@ from app.infrastructure.descriptors.csv_descriptors.dialects.excel_dialect impor
 
 
 class CLIArgs(TypedDict):
-    input: str
+    input_files: list[Path]
     report_type: str
 
 
 def payout_report(**kwargs: Unpack[CLIArgs]) -> None:
-    input_arg = kwargs["input"]
-    csv_path = Path(input_arg)
+    input_files = kwargs["input_files"]
 
-    if not csv_path.is_file():
-        raise FileNotFoundError(f"Not found file on path: {input_arg!r}")
-
-    reader = FileReader(csv_path)
     parser = CSVParser(CSV_EXCEL_DIALECT)
     formatter = PayoutTableFormatter()
     writer = StdoutWriter()
 
-    GetPayoutReportInteractor(
-        reader=reader,
-        parser=parser,
-        formatter=formatter,
-        writer=writer,
-        aliases=EMPLOYEE_COLUMN_NAME_ALIASES,
-        payout_service=PayoutService(),
-        reports_service=ReportsService(),
-    )()
+    for file_path in input_files:
+        if not file_path.is_file():
+            raise FileNotFoundError(f"Not found file on path: {file_path!r}")
+
+        GetPayoutReportInteractor(
+            reader=FileReader(file_path),
+            parser=parser,
+            formatter=formatter,
+            writer=writer,
+            aliases=EMPLOYEE_COLUMN_NAME_ALIASES,
+            payout_service=PayoutService(),
+            reports_service=ReportsService(),
+        )()
 
 
 def setup_argparse(default_report_type: str, known_report_types: Iterable[str]) -> CLIArgs:
     parser = argparse.ArgumentParser(description="Генерация отчётов по сотрудникам")
     parser.add_argument(
-        "-i", "--input", type=Path, required=True, help="Путь к входному CSV-файлу"
+        "-i", "--input", nargs="+", type=Path, required=True, help="Путь к входному CSV-файлу"
     )
     parser.add_argument(
         "-r",
@@ -63,7 +62,7 @@ def setup_argparse(default_report_type: str, known_report_types: Iterable[str]) 
     )
     namespace = parser.parse_args()
 
-    return CLIArgs(input=namespace.input, report_type=namespace.report)
+    return CLIArgs(input_files=namespace.input, report_type=namespace.report)
 
 
 REPORT_MAP = {"payout": payout_report}
@@ -74,5 +73,4 @@ if __name__ == "__main__":
 
     if report_handler is None:
         raise ValueError("Report type not exsist")
-
     report_handler(**kwargs)
